@@ -1,0 +1,24 @@
+.pane {
+	-webkit-transition-duration: 250ms!important; 
+	transition-duration: 250ms!important; 
+}
+
+.tabs-top .tabs {
+	margin-top: 12px!important;
+}
+
+.round {
+	border-radius: 50%;
+	width: 56px;
+	height: 56px;
+}
+
+.absolute {
+	position: absolute;
+	z-index: 9999!important;
+}
+
+.bottom-right {
+	bottom: 60px;
+	right: 17px;
+}

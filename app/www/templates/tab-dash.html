@@ -1,0 +1,95 @@
+<script id="new-device-modal.html" type="text/ng-template">
+  <ion-modal-view>
+    <ion-header-bar class="bar-dark">
+      <h1 ng-if="!newdevice.exists" class="title">Add device</h1>
+      <h1 ng-if="newdevice.exists" class="title">Edit device</h1>
+    </ion-header-bar>
+    <ion-content>
+    <div class="list">
+
+
+    <label class="item item-input">
+      <span class="input-label">Device label</span>
+      <input ng-model="newdevice.label" class="input-label" type="text" placeholder="Device label">
+    </label>
+
+    <div class="item item-input item-button-right">
+        <span class="input-label">Pin label</span>
+        
+        <input ng-model="newdevice.pinLabel" class="input-label" type="text" placeholder="Add new pin">
+        
+        <button style="right: 8px;" class="button button-small button-clear" ng-click="addPin()">
+        <i class="ion-plus" ></i>
+        </button>
+    </div>
+    </div>
+
+    <div class="list">
+    <div class="item item-button-right" ng-repeat="pin in newdevice.pins">
+        <span type="text">{{pin.label}}</span>
+        <button style="right: 8px;" class="button button-small button-clear" ng-click="deletePin(pin)">
+        <i class="ion-trash-b assertive"></i>
+        </button>
+    </div>
+    </div>
+      <div class="row">
+        <div class="col">
+          <a ng-click="closeModal()" class="button button-outline button-block button-assertive ion-close"></a>
+        </div>
+        <div class="col">
+
+         <a ng-if="newdevice.exists" ng-click="save()" class="button button-outline button-block button-positive ion-checkmark"></a>
+
+          <a ng-if="!newdevice.exists" ng-click="create()" class="button button-outline button-block button-positive ion-checkmark"></a>
+        </div>
+      </div>
+    </div>
+    </ion-content>
+  </ion-modal-view>
+</script>
+
+<script id="my-popover.html" type="text/ng-template">
+  <ion-popover-view>
+    <ion-content>
+      <div class="list">
+        <a class="item" href="#">
+          Learn Ionic
+        </a>
+        <a class="item item-divider">
+        </a>
+        <a class="item" href="#">
+          Documentation
+        </a>
+      </div>
+    </ion-content>
+  </ion-popover-view>
+</script>
+
+<ion-view view-title="Device control">
+  <div class="round float absolute bottom-right">
+      <button ng-click="addDevice()" class="button button-assertive round"><i class="ion-plus"></i></button>
+  </div>
+
+  <ion-content class="padding" on-swipe-right="goBack()" on-swipe-left="goForward()">
+    
+    <div style="text-align: center; padding-top: 54%" ng-show="devices.length == 0">
+      <h4 ng-show="devices.length == 0"> Não existe nada cadastrado </h4>
+    </div>
+
+    <div class="list card" ng-repeat="device in devices">
+      <div class="item item-divider">
+        <strong>{{device.label}}</strong>
+        <a class="button-clear item-icon-right" ng-click="editDevice(device)"><i class="icon ion-gear-a"></i></a>
+      </div>
+      <div class="item item-body">
+        <div>
+          <ion-toggle ng-repeat="pin in device.pins" ng-model="pin.enabled" ng-change="setPin(device, pin)">
+              {{pin.label}}
+          </ion-toggle>
+        </div>
+      </div>
+    </div>
+    <div style="padding-top: 64px">
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,11 @@
+<ion-view view-title="Settings">
+  <ion-content class="padding" on-swipe-right="goBack()" on-swipe-left="goForward()">
+    
+    <ion-list>
+      <ion-item ng-repeat="network in networks" href="#">
+        {{network.ssid}}
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-view>
