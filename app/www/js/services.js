@@ -2,21 +2,21 @@ angular.module('starter.services', [])
 
 .factory('DeviceFactory', function() {
   var devices = [
-    {
+    /*{
       'exists': true,
-      'label': 'Cozinha',
-      'ip': '192.168.25.66',
+      'label': 'ESP-1',
+      'ip': '192.168.1.118',
       'pins': [
       {
-        'label': 'Torradeira',
+        'label': 'GPIO0',
         'enabled': false
       },
       {
-        'label': 'Cafeteira',
-        'enabled': true
+        'label': 'GPIO1',
+        'enabled': false
       },
       {
-        'label': 'Liquidificador',
+        'label': 'GPIO2',
         'enabled': false
       }
       ]
@@ -65,7 +65,7 @@ angular.module('starter.services', [])
         'enabled': true
       }
       ]
-    }
+    }*/
   ];
 
   return {
@@ -84,13 +84,8 @@ angular.module('starter.services', [])
   var networks = [
     {
       'exists': true,
-      'ssid': 'GVT-FAEB',
-      'password': '9888548211',
-    },
-    {
-      'exists': true,
-      'ssid': 'GVT-8266',
-      'password': 'CP1318RMJBZ',
+      'ssid': 'LSE-S10',
+      'password': 'embarcados'
     }
   ];
 
@@ -99,10 +94,24 @@ angular.module('starter.services', [])
       return networks;
     },
     remove: function(network) {
-      networks.splice(devices.indexOf(device), 1);
+      networks.splice(networks.indexOf(network), 1);
+    },
+    get: function (ssid) {
+      for(var i = 0; i < networks.length; i++) {
+        if(networks[i].ssid === ssid)
+          return networks[i];
+      }
+      return {};
     },
     add: function (network){
-      networks.push(device);
+      networks.push(network);
+    },
+    exists: function (ssid) {
+      for(var i = 0; i < networks.length; i++) {
+        if(networks[i].ssid === ssid)
+          return true;
+      }
+      return false;
     }
   };
 });

@@ -1,12 +1,11 @@
 angular.module('starter.controllers', [])
-.controller('TabsCtrl', function ($scope, $ionicTabsDelegate, $ionicPlatform) {
+.controller('TabsCtrl', function ($scope, $ionicTabsDelegate, $ionicPlatform, $ionicPopup, NetworkFactory) {
 
   $scope.config = {};
 
   $scope.getSSID = function () {
     WifiWizard.getCurrentSSID(function(ssid) {
       $scope.config.ssid = ssid.replace(/\"/g, '');
-      console.log("{ssid} " + JSON.stringify($scope.config.ssid));
     });
   };
 
@@ -25,11 +24,49 @@ angular.module('starter.controllers', [])
   };
 
   $ionicPlatform.ready(function(){
-    $scope.getSSID();
+    WifiWizard.getCurrentSSID(function(ssid) {
+      $scope.config.ssid = ssid.replace(/\"/g, '');
+      $scope.data = {};
+      if($scope.config.ssid != "GEEE") {
+
+        if(NetworkFactory.exists($scope.config.ssid)){
+          return;
+        }
+
+        var myPopup = $ionicPopup.show({
+          templateUrl: 'ask-wifi.html',
+          title: 'Cadastrar rede ' + $scope.config.ssid,
+          scope: $scope,
+          buttons: [
+            {
+              text: '<b>Salvar</b>',
+              type: 'button-positive',
+              onTap: function(e) {
+                  if($scope.data.pwd === $scope.data.confirm)
+                    return $scope.data.pwd;
+                  else {
+                    $scope.data.pwd = $scope.data.confirm = '';
+                    $scope.pwderror = true;
+                    e.preventDefault();
+                  }
+              }
+            }
+          ]
+        });
+        myPopup.then(function(password) {
+          var network = {
+            'exists': true,
+            'ssid' : $scope.config.ssid,
+            'password': password
+          };
+          NetworkFactory.add(network);
+        });
+      }
+    });
   });
   
 })
-.controller('DashCtrl', function($scope, $ionicPopover, $http, $ionicPlatform, $cordovaNetwork, $ionicLoading, $timeout, $interval, $ionicModal, DeviceFactory) {
+.controller('DashCtrl', function($scope, $ionicPopover, $http, $ionicPlatform, $cordovaNetwork, $ionicLoading, $timeout, $interval, $ionicModal, DeviceFactory, NetworkFactory) {
 
   $scope.$on("$ionicView.enter", function () {
     $scope.devices = DeviceFactory.all();
@@ -38,7 +75,7 @@ angular.module('starter.controllers', [])
   $scope.show = function() {
     if(!$scope.shown){
       $ionicLoading.show({
-        template: '<span style="text-align: center"><ion-spinner class="spinner-assertive"></ion-spinner><h4>Por favor, conecte-se ao wifi "GEEE"</h4></span><hr><button class="button button-block button-assertive" ng-click="hide()"><i class="ion-cross"></i> Cancelar</button>',
+        templateUrl: 'busy.html',
         scope: $scope
       });
       $scope.shown = true;
@@ -70,7 +107,7 @@ angular.module('starter.controllers', [])
       params: request
     }
 
-    $http.get('//' + device.ip, data).then($scope.postSuccess, $scope.postError);
+    $http.get('http://' + device.ip + '/node_info.lua', data).then($scope.postSuccess, $scope.postError);
        
   }
 
@@ -129,7 +166,7 @@ angular.module('starter.controllers', [])
       if(!($scope.newdevice.label && 
         $scope.newdevice.pins.length > 0))
         return;
-      
+
       $scope.newdevice.exists = true;
 
       DeviceFactory.add($scope.newdevice);
@@ -190,37 +227,58 @@ angular.module('starter.controllers', [])
   $scope.addDevice = function () {
       $scope.networkType = $cordovaNetwork.getNetwork();
 
-      $scope.getSSID();
-
       if($scope.networkType == 'wifi') {
-        $scope.SSIDScan = $interval(function(){
-          if($scope.config.ssid != "GVT-FAEB") {
-            
-            networkinterface.getIPAddress(function (ip) { 
-              $scope.newdevice.ip = ip;
-            });
+        $scope.getSSID();
 
-            networkinterface.getGateway( function( gateway ) {
-              $scope.newdevice.gateway = gateway;
-            }, function (fail) {
-              console.error(JSON.stringify(fail));
-            });
+        if($scope.config.ssid != "GEEE") {
+          $scope.show();
+          $scope.localNetwork = NetworkFactory.get($scope.config.ssid);
 
-            $scope.show();
-          }
-          else {
-            $scope.openModal();
-            $scope.hide();
-          }
-        }, 150);
+          $scope.SSIDScan = $interval(function(){
+            if($scope.config.ssid != "GEEE")
+              $scope.getSSID();
+            else {
+              alert('im on geee');
+              var setSuccess = function (data) {
+                alert(json.stringify(data));
+                console.log("{success!!} " + JSON.stringify(data));
+              };
+
+              var setError = function (error) {
+                alert(json.stringify(error));
+                console.error(JSON.stringify(error));
+              };
+
+              var request = {
+                ssid: $scope.localNetwork.ssid,
+                pwd: $scope.localNetwork.password
+              };
+
+              var data = {
+                params: request
+              }
+              $timeout(function(){
+                alert('im sending request');
+                $http.get('http://192.168.111.1/connect.lua', data).then(setSuccess, setError); 
+              }, 1000);
+              
+              $interval.cancel($scope.SSIDScan);
+              $scope.openModal();
+              $scope.hide();
+            }
+          }, 150);
+        }
+      } else {
+        alert("NO WIFI!");
       }
   };
 
 })
-.controller('AccountCtrl', function($scope, $http, $ionicPlatform, $cordovaNetwork, $ionicLoading, $timeout, $interval, $ionicModal, DeviceFactory) {
+.controller('AccountCtrl', function($scope, $http, $ionicPlatform, $cordovaNetwork, $ionicLoading, $timeout, $interval, $ionicModal, DeviceFactory, NetworkFactory) {
   
   $scope.config = {};
-
+  $scope.networks = NetworkFactory.all();
+  
   $ionicPlatform.ready(function (){
     $scope.networkType = $cordovaNetwork.getNetwork();
     $scope.getSSID();

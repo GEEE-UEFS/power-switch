@@ -65,6 +65,34 @@
   </ion-popover-view>
 </script>
 
+<script id="ask-wifi.html" type="text/ng-template">
+  <div style="text-align: center; padding-bottom: 4px;">
+    <small ng-show="pwderror">As senhas não conferem</small>
+    <small ng-show="!pwderror">Digite a senha da sua rede wireless.</small>
+  </div>
+  <div class="list">
+    <label class="item item-input">
+      <input style="text-align: center" placeholder="Senha da rede" type="password" ng-model="data.pwd">
+    </label>
+    <div style="padding-top: 6px"></div>
+    <label class="item item-input">
+      <input style="text-align: center" type="password" placeholder="Confirmar senha" ng-model="data.confirm">
+    </label>
+  </div>
+</script>
+
+<script id="busy.html" type="text/ng-template">
+  <span style="text-align: center">
+    <ion-spinner class="spinner-assertive"></ion-spinner>
+    <h4>Por favor, conecte-se ao wifi "GEEE"</h4>
+  </span>
+  <hr>
+  <button class="button button-block button-assertive" ng-click="hide()">
+    <i class="ion-cross"></i>
+    Cancelar
+  </button>
+</script>  
+
 <ion-view view-title="Device control">
   <div class="round float absolute bottom-right">
       <button ng-click="addDevice()" class="button button-assertive round"><i class="ion-plus"></i></button>
@@ -74,6 +102,10 @@
     
     <div style="text-align: center; padding-top: 54%" ng-show="devices.length == 0">
       <h4 ng-show="devices.length == 0"> Não existe nada cadastrado </h4>
+    </div>
+
+    <div style="text-align: center;" ng-show="config.ssid">
+      <h4> Rede: {{config.ssid}} </h4>
     </div>
 
     <div class="list card" ng-repeat="device in devices">
