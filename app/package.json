@@ -32,7 +32,11 @@
       "locator": "https://github.com/vallieres/cordova-plugin-get-router-ip-address",
       "id": "com.vallieres.plugin.getrouteripaddress"
     },
-    "cz.blocshop.socketsforcordova"
+    "cz.blocshop.socketsforcordova",
+    {
+      "locator": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
+      "id": "cordova-plugin-x-toast"
+    }
   ],
   "cordovaPlatforms": [
     "android"

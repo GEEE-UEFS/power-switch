@@ -2,7 +2,7 @@
   <ion-content class="padding" on-swipe-right="goBack()" on-swipe-left="goForward()">
     
     <ion-list>
-      <ion-item ng-repeat="network in networks" href="#">
+      <ion-item ng-repeat="network in networks" href="#" ng-click="remove(network)">
         {{network.ssid}}
       </ion-item>
     </ion-list>

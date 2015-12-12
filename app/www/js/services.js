@@ -18,9 +18,21 @@ angular.module('starter.services', [])
       {
         'label': 'GPIO2',
         'enabled': false
+      },
+      {
+        'label': 'GPIO3',
+        'enabled': false
+      },
+      {
+        'label': 'GPIO4',
+        'enabled': false
+      },
+      {
+        'label': 'GPIO5',
+        'enabled': false
       }
       ]
-    },
+    },/*
     {
       'exists': true,
       'label': 'Sala',
@@ -82,11 +94,11 @@ angular.module('starter.services', [])
 })
 .factory('NetworkFactory', function() {
   var networks = [
-    {
+    /*{
       'exists': true,
       'ssid': 'LSE-S10',
       'password': 'embarcados'
-    }
+    }*/
   ];
 
   return {
