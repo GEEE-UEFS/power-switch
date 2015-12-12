@@ -2,6 +2,8 @@
 
 local wifiConfig = {}
 
+node.setcpufreq(node.CPU160MHZ)
+
 -- wifi.STATION         -- station: join a WiFi network
 -- wifi.SOFTAP          -- access point: create a WiFi network
 -- wifi.wifi.STATIONAP  -- both station and access point
@@ -53,13 +55,15 @@ for i, f in ipairs(serverFiles) do compileAndRemoveIfNeeded(f) end
 compileAndRemoveIfNeeded = nil
 serverFiles = nil
 collectgarbage()
-
 -- Connect to the WiFi access point.
 -- Once the device is connected, you may start the HTTP server.
 
 -- Uncomment to automatically start the server in port 80
 if (not not wifi.sta.getip()) or (not not wifi.ap.getip()) then
-    dofile("httpserver.lc")(80)    
+   dofile("httpserver.lc")(80)
+   --sv:listen(81, function(connection)
+   --  connection:on('receive', function (connection, payload)
+   --    print(tostring(payload));
+   --  end)
+   --end)
 end
-
-

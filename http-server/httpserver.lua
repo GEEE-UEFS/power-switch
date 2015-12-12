@@ -62,60 +62,41 @@ return function (port)
             local method = req.method
             local uri = req.uri
             local fileServeFunction = nil
-            
-            print("Method: " .. method);
-            
-            if #(uri.file) > 32 then
-               -- nodemcu-firmware cannot handle long filenames.
-               uri.args = {code = 400, errorString = "Bad Request"}
-               fileServeFunction = dofile("httpserver-error.lc")
-            else
-               local fileExists = file.open(uri.file, "r")
-               file.close()
-            
-               if not fileExists then
-                 -- gzip check
-                 fileExists = file.open(uri.file .. ".gz", "r")
-                 file.close()
 
-                 if fileExists then
-                    print("gzip variant exists, serving that one")
-                    uri.file = uri.file .. ".gz"
-                    uri.isGzipped = true
-                 end
-               end
-
-               if not fileExists then
-                  uri.args = {code = 404, errorString = "Not Found"}
-                  fileServeFunction = dofile("httpserver-error.lc")
-               elseif uri.isScript then
-                  fileServeFunction = dofile(uri.file)
-               else
-                  if allowStatic[method] then
-                    uri.args = {file = uri.file, ext = uri.ext, gzipped = uri.isGzipped}
-                    fileServeFunction = dofile("httpserver-static.lc")
-                  else
-                    uri.args = {code = 405, errorString = "Method not supported"}
-                    fileServeFunction = dofile("httpserver-error.lc")
-                  end
-               end
+            local fileExists = file.open(uri.file, "r")
+            file.close()
+            
+            if not fileExists then
+              uri.args = {code = 404, errorString = "Not Found"}
+              fileServeFunction = dofile("httpserver-error.lc")
+            elseif uri.isScript then
+                fileServeFunction = dofile(uri.file)
             end
+              --    if allowStatic[method] then
+              --      uri.args = {file = uri.file, ext = uri.ext, gzipped = uri.isGzipped}
+              --      fileServeFunction = dofile("httpserver-static.lc")
+              --    else
+              --      uri.args = {code = 405, errorString = "Method not supported"}
+              --      fileServeFunction = dofile("httpserver-error.lc")
+              --    end
+              -- end
+            --end
             startServing(fileServeFunction, connection, req, uri.args)
          end
 
          local function onReceive(connection, payload)
             collectgarbage()
-            local conf = dofile("httpserver-conf.lc")
-            local auth
+            --local conf = dofile("httpserver-conf.lc")
+            --local auth
             local user = "Anonymous"
 
             -- parse payload and decide what to serve.
             local req = dofile("httpserver-request.lc")(payload)
-            print("Requested URI: " .. req.request)
-            if conf.auth.enabled then
-               auth = dofile("httpserver-basicauth.lc")
-               user = auth.authenticate(payload) -- authenticate returns nil on failed auth
-            end
+            --print("Requested URI: " .. req.request)
+            --if conf.auth.enabled then
+            --   auth = dofile("httpserver-basicauth.lc")
+            --   user = auth.authenticate(payload) -- authenticate returns nil on failed auth
+            --end
 
             if user and req.methodIsValid and (req.method == "GET" or req.method == "POST" or req.method == "PUT") then
                onRequest(connection, req)

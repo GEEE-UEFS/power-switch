@@ -9,7 +9,7 @@ local function validateMethod(method)
 end
 
 local function uriToFilename(uri)
-   print("serving "..uri)
+   --print("serving "..uri)
    return "httpfile-" .. string.sub(uri, 2, -1)
 end
 
@@ -34,11 +34,11 @@ end
 
 local function parseFormData(body)
   local data = {}
-  print("Parsing Form Data")
+  --print("Parsing Form Data")
   for kv in body.gmatch(body, "%s*&?([^=]+=[^&]+)") do
     local key, value = string.match(kv, "(.*)=(.*)")
     
-    print("Parsed: " .. key .. " => " .. value)
+    --print("Parsed: " .. key .. " => " .. value)
     data[key] = uri_decode(value)
   end
   
@@ -48,7 +48,7 @@ end
 local function getRequestData(payload)
   local requestData
   return function ()
-    print("Getting Request Data")
+    --print("Getting Request Data")
     if requestData then
       return requestData
     else
@@ -61,7 +61,7 @@ local function getRequestData(payload)
       -- print("mimeType = [" .. mimeType .. "]")
       
       if mimeType == "application/json" then
-        print("JSON: " .. body)
+        --print("JSON: " .. body)
         requestData = cjson.decode(body)
       elseif mimeType == "application/x-www-form-urlencoded" then
         requestData = parseFormData(body)
@@ -81,7 +81,7 @@ local function parseUri(uri)
    local fullExt = {}
 
    if uri == nil then return r end
-   if uri == "/" then uri = "/index.html" end
+   --if uri == "/" then uri = "/index.html" end
    questionMarkPos, b, c, d, e, f = uri:find("?")
    if questionMarkPos == nil then
       r.file = uri:sub(1, questionMarkPos)
@@ -95,12 +95,12 @@ local function parseUri(uri)
       filename,ext = filename:match("(.+)%.(.+)")
       table.insert(fullExt,1,ext)
    end
-   if #fullExt > 1 and fullExt[#fullExt] == 'gz' then
-      r.ext = fullExt[#fullExt-1]
-      r.isGzipped = true
-   elseif #fullExt >= 1 then
-      r.ext = fullExt[#fullExt]
-   end
+   --if #fullExt > 1 and fullExt[#fullExt] == 'gz' then
+   --   r.ext = fullExt[#fullExt-1]
+   --   r.isGzipped = true
+   --elseif #fullExt >= 1 then
+   r.ext = fullExt[#fullExt]
+   --end
    r.isScript = r.ext == "lua" or r.ext == "lc"
    r.file = uriToFilename(r.file)
    return r
@@ -114,7 +114,7 @@ return function (request)
    local line = request:sub(1, e - 1)
    local r = {}
    _, i, r.method, r.request = line:find("^([A-Z]+) (.-) HTTP/[1-9]+.[0-9]+$")
-   r.methodIsValid = validateMethod(r.method)
+   r.methodIsValid = true--validateMethod(r.method)
    r.uri = parseUri(r.request)
    r.getRequestData = getRequestData(request)
    return r
