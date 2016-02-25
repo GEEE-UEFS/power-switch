@@ -1,0 +1,13 @@
+{
+  "name": "HelloIonic",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.2.4",
+    "ionic-native-transitions": "https://github.com/shprink/ionic-native-transitions",
+    "ngCordova": "~0.1.24-alpha"
+  },
+  "dependencies": {
+    "angular-pouchdb": "~4.1.0",
+    "ionic-native-transitions": "shprink/ionic-native-transitions#~1.0.0-rc9"
+  }
+}

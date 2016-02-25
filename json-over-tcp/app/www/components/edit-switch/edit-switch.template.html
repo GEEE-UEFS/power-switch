@@ -1,0 +1,28 @@
+<ion-view view-title="{{switch.default}}">
+  <ion-content class="padding">
+    <ion-list>
+        <label class="item item-input item-label">
+          <span class="input-label">Switch label</span>
+          <input required type="text" placeholder="Default ({{switch.default}})" ng-model="switch.label">
+        </label>
+        <ion-toggle ng-model="switch.isDimmer" toggle-class="toggle-calm">
+          Dimmer output
+        </ion-toggle>
+    </ion-list>
+
+    <div class="row">
+        <div class="col col-50">
+            <button ng-click="switch.cancel()" class="button button-block button-outline button-assertive" shake-me>
+                <i class="ion-close"></i>
+            </button>
+        </div>
+
+        <div class="col col-50">
+            <button ng-click="switch.save()" class="button button-block button-outline button-positive">
+                <i class="ion-checkmark"></i>
+            </button>
+        </div>
+    </div>
+  
+  </ion-content>
+</ion-view>

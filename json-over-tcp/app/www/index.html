@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="shared/app.style.css" rel="stylesheet">
+    <link href="shared/animation.style.css" rel="stylesheet">
+
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/pouchdb/dist/pouchdb.min.js"></script>
+    <script src="lib/angular-pouchdb/angular-pouchdb.min.js"></script>
+    <script src="lib/ionic-native-transitions/dist/ionic-native-transitions.min.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+
+    <script src="cordova.js"></script>
+
+    <script src="shared/app.config.js"></script>
+    <script src="shared/app.routes.js"></script>
+    <script src="shared/services/wifi-data.service.js"></script>
+    <script src="shared/services/devices.service.js"></script>
+    <script src="shared/services/json-tcp.service.js"></script>
+    <script src="shared/services/wifi-info.service.js"></script>
+    
+    <script src="components/home/home.controller.js"></script>
+    <script src="components/add-device/add-device.controller.js"></script>
+    <script src="components/config-wifi/config-wifi.controller.js"></script>
+    <script src="components/edit-switch/edit-switch.controller.js"></script>
+    <script src="components/advanced-wifi/advanced-wifi.controller.js"></script>
+
+  <body ng-app="app">
+      <ion-nav-view></ion-nav-view>
+  </body>
+
+</html>

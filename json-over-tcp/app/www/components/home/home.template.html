@@ -1,0 +1,86 @@
+<ion-view view-title="Home">
+
+  <ion-nav-buttons side="primary">
+      <button ng-show="home.wifi.set && home.isOnLocalNetwork" class="button button-icon" ng-click="home.advancedSettings()">
+        <i class="icon ion-gear-a"></i>
+      </button>
+  </ion-nav-buttons>
+
+  <ion-content class="padding center-text" scroll="false" ng-show="!home.loaded">
+    <h5> Waiting wifi network... </h5>
+    <ion-spinner></ion-spinner>
+  </ion-content>
+
+  <ion-content scroll="false" class="padding" ng-show="home.loaded">
+    <div ng-show="!home.wifi.set && home.isOnLocalNetwork" class="center-text no-devices">
+      <h4> Your wireless network is not set-up</h4>
+      <h5> Current network: {{home.wifi.ssid}}</h5>
+      <button ng-show="!home.isWifiSetup" ng-click="home.configureWifi()" class="button button-block button-outline button-positive">
+        <i class="ion-gear-a"></i> Set-up wifi
+      </button>
+    </div>
+
+    <div ng-show="!home.isOnLocalNetwork" class="center-text no-devices">
+      <h4> Please, set up your local network by connecting to it first.</h4>
+      <br><br>
+      <i ng-click="home.openWifiSettings()" class="icon icon-big ion-wifi gray-text"></i><br>
+      <small> Tap to open settings </small>
+    </div>
+
+    <div ng-show="home.wifi.set">
+      <div class="center-text">
+      <button ng-click="home.dropNetwork()" class="button button-block button-outline button-assertive">
+          <i class="ion-remove"></i> Remove network
+      </button>
+
+        <h4>Network: {{home.wifi.ssid}}</h4>
+        <h6 ng-show="home.devices.length > 0">{{home.devices.length}} device{{home.devices.length == 1?'':'s'}} found
+      </div>
+    </div>
+  </ion-content>
+
+  <ion-content class="padding device-list" ng-show="home.wifi.set && home.isOnLocalNetwork && home.devices.length > 0">
+    <div class="list card" ng-repeat="device in home.devices">
+      <div class="item item-divider item-dark">
+
+        <strong>{{device.label}}</strong>
+        <small><br>{{device.address}}</small>
+
+        <a class="button-clear item-icon-right" ng-click="editDevice(device)"><i class="icon ion-gear-a"></i></a>
+      </div>
+      <div class="item item-body">
+          <ion-toggle ng-show="device.online" ng-repeat="switch in device.switches" ng-model="switch.enabled" ng-change="home.changeSwitch(device, switch)">
+            {{switch.label}}
+          </ion-toggle>
+  
+          <div class="center-text" ng-show="device.connecting">
+            Connecting... <br>
+            <ion-spinner></ion-spinner>
+          </div>
+
+          <div class="center-text" ng-show="device.offline">
+            Device is offline.<br>
+            <i class="icon ion-alert-circled"></i>
+          </div>
+
+      </div>
+    </div>
+
+    <button ng-click="home.addDevice()" class="button button-block button-outline button-positive">
+        <i class="ion-plus"></i> Add device
+    </button>
+  </ion-content>
+  
+  <ion-content scroll="false" class="padding no-devices center-text" ng-show="home.devices.length == 0 && home.isOnLocalNetwork && home.wifi.set">
+    <h4 class="center-text gray-text">
+      No devices added
+    </h4>
+
+    <h6>Tap to add a device</h6>
+      <button ng-click="home.addDevice()" class="button button-block button-outline button-positive">
+        <i class="ion-plus"></i> Add device
+      </button>
+  </ion-content>
+
+
+</ion-view>

@@ -1,0 +1,33 @@
+/*
+.pane {
+    -webkit-transition-duration: 250ms!important; 
+    transition-duration: 250ms!important; 
+}
+*/
+.device-list {
+    top: 168px;
+}
+
+.icon-big {
+    font-size: 128px;
+}
+
+.gray-text {
+    color: gray;
+}
+
+.no-devices {
+    top: 256px;
+}
+
+.center-text {
+    text-align: center
+}
+
+.switch {
+    display: inline;
+}
+
+.right {
+    float: right;
+}

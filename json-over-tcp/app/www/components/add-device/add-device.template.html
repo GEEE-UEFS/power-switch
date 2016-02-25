@@ -1,0 +1,32 @@
+<ion-view view-title="Add device">
+  <ion-content class="padding">
+    <ion-list>
+    <h4> Device label </h4>
+        <label class="item item-input">
+          <input required type="text" placeholder="Device label" ng-model="device.label">
+        </label>
+  
+       <h4> Switches </h4>
+      <div class="item" ng-repeat="switch in device.switches" ng-click="device.editSwitch(switch)">
+          <div class="switch"> {{switch.label || switch.default}} </div>
+          <small class="right"> Tap to edit </small>
+      </div>
+
+    </ion-list>
+
+    <div class="row">
+        <div class="col col-50">
+            <button ng-click="device.cancel()" class="button button-block button-outline button-assertive" shake-me>
+                <i class="ion-close"></i>
+            </button>
+        </div>
+
+        <div class="col col-50">
+            <button ng-disabled="(device.label == '')" ng-click="device.save()" class="button button-block button-outline button-positive">
+                <i class="ion-checkmark"></i>
+            </button>
+        </div>
+    </div>
+  
+  </ion-content>
+</ion-view>
