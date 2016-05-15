@@ -80,9 +80,9 @@ function idle_indication()
     if not i_ind then
         c_ind = false;
         tmr.alarm(0, 2000, 1, function ()
-            gpio.write(pin[0], gpio.LOW)
+            gpio.write(pin[5], gpio.LOW)
             tmr.alarm(1, 100, 0, function ()
-                gpio.write(pin[0], gpio.HIGH)
+                gpio.write(pin[5], gpio.HIGH)
             end)
         end)
         i_ind = true
@@ -93,9 +93,9 @@ function connecting_indication()
     if not c_ind then
         i_ind = false;
         tmr.alarm(0, 300, 1, function ()
-            gpio.write(pin[0], gpio.LOW)
+            gpio.write(pin[5], gpio.LOW)
             tmr.alarm(1, 100, 0, function ()
-                gpio.write(pin[0], gpio.HIGH)
+                gpio.write(pin[5], gpio.HIGH)
             end)
         end)    
         c_ind = true
@@ -104,7 +104,7 @@ end
 
 tmr.alarm(2, 3000, 1, function ()
     if wifi.sta.status() == 5 then
-        gpio.write(pin[0], gpio.LOW)
+        gpio.write(pin[5], gpio.LOW)
         tmr.stop(0)
     elseif wifi.sta.status() == 1 then
         connecting_indication()

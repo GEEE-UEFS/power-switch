@@ -18,9 +18,9 @@
 
         function connect (ssid) {
             WifiWizard.connectNetwork(ssid, function () {
-                console.log("{connected to GEEE} " + JSON.stringify());
+                console.log("{connected to} " + JSON.stringify(ssid));
             }, function () {
-                console.error(JSON.stringify('connection failed to GEEE'));
+                console.error(JSON.stringify('connection failed to ' + ssid));
             });
         }
 

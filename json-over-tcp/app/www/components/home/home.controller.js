@@ -5,9 +5,9 @@
         .module('app')
         .controller('HomeController', HomeController)
     
-    HomeController.$inject = ['$cordovaNetwork', 'devices', '$ionicPlatform', 'jsonTCP', '$scope', '$state', '$stateParams', '$timeout', 'wifiData', 'wifiInfo'];
+    HomeController.$inject = ['$rootScope', '$cordovaNetwork', 'devices', '$ionicPlatform', 'jsonTCP', '$scope', '$state', '$stateParams', '$timeout', 'wifiData', 'wifiInfo', '$interval'];
 
-    function HomeController($cordovaNetwork, devices, $ionicPlatform, jsonTCP, $scope, $state, $stateParams, $timeout, wifiData, wifiInfo){
+    function HomeController($rootScope, $cordovaNetwork, devices, $ionicPlatform, jsonTCP, $scope, $state, $stateParams, $timeout, wifiData, wifiInfo, $interval){
         var vm = this;
 
 
@@ -26,6 +26,8 @@
             set: false
         };
 
+        vm.wifiStateTimer = undefined;
+
         activate();
 
         function activate () {
@@ -34,7 +36,7 @@
             $ionicPlatform.ready(function (){
                 vm.socket = jsonTCP.init();
 
-                $scope.$on('$cordovaNetwork:online', function(evt, networkState){
+                $rootScope.$on('$cordovaNetwork:online', function(evt, networkState){
                     if(networkState == 'wifi') {
                          $ionicPlatform.ready(function (){
                             console.log("{connection changed} " + JSON.stringify());
@@ -74,9 +76,20 @@
         }
 
         function changeSwitch (device, sw) {
+
+            var setPinMessage = {
+                action: 'setPin',
+                params: {
+                    pinNumber: sw.id,
+                    enable: sw.enabled
+                }
+            };
+
+
+            console.log("{changing switch} " + JSON.stringify(sw));
             jsonTCP.open(device.socket, device.address, 7555).then(function (){
                 console.log("{opened socket} " + JSON.stringify());
-                jsonTCP.write(device.socket, {action: 'getStatus'}).then(function (data){
+                jsonTCP.write(device.socket, setPinMessage).then(function (data){
                     console.log("{data} " + JSON.stringify(data));
                     jsonTCP.close(device.socket);
                 });
@@ -108,7 +121,10 @@
             if(vm.processing)
                 return;
 
-            if($cordovaNetwork.getNetwork() != 'wifi'){
+            var network = $cordovaNetwork.getNetwork();
+
+            if(network != 'wifi'){
+                console.log("{connection is} " + JSON.stringify(network));
                 vm.processing = false;
                 return;
             }
@@ -135,6 +151,7 @@
                     vm.wifi.password = wifi.password;
                     console.log("{got wifi} " + JSON.stringify(vm.wifi));
                     vm.devices = [];
+
                     devices.all(vm.wifi.ssid).then(function (devices) {
                         vm.devices = devices;
                         

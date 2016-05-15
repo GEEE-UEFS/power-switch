@@ -13,11 +13,11 @@ return function (params)
         [255] = "ap_only"
     }
 
-    if gpio.read(pin[5]) == gpio.HIGH then
-        gpio.write(pin[5], gpio.LOW)
-    else
-        gpio.write(pin[5], gpio.HIGH)
-    end
+    -- if gpio.read(pin[5]) == gpio.HIGH then
+    --     gpio.write(pin[5], gpio.LOW)
+    -- else
+    --     gpio.write(pin[5], gpio.HIGH)
+    -- end
 
     print(status .. " " .. status_text[status])
     response ["status"] = status_text[status]
